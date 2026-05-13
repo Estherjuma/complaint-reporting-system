@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Track Complaint{% endblock %}
+{% block content %}
+<div style="text-align:center">
+    <h1>Complaint Reporting & Resolution System</h1>
+    <h3>Track your complaint status below</h3>
+</div>
+<form method="POST">
+    <div class="form-group">
+        <label>Ticket ID</label>
+        <input type="text" name="ticket_id" placeholder="Enter your ticket ID..." required>
+    </div>
+    <button type="submit" style="margin-top: 10px;">Track Complaint</button>
+</form>
+
+{% if complaint %}
+<hr>
+
+<h4>Complaint Details</h4>
+<p><strong>Ticket ID:</strong> {{ complaint.ticket_id }}</p>
+<p><strong>Category:</strong> {{ complaint.category }}</p>
+<p><strong>Description:</strong>{{ complaint.description }}</p>
+<p><strong>Evidence:</strong>
+    {% if complaint.evidence_file %}
+        <a href="{{ url_for('static', filename='uploads/' ~ complaint.evidence_file) }}" target="_blank">
+            View Evidence
+        </a>
+    {% else %}
+        —
+    {% endif %}
+</p>
+<p><strong>Status:</strong>
+    {% if complaint.status == "Resolved" %}
+        <span class="badge resolved">Resolved</span>
+    {% elif complaint.status == "In Progress" %}
+        <span class="badge progress">In Progress</span>
+    {% else %}
+        <span class="badge pending">Pending</span>
+    {% endif %}
+</p>
+
+<p><strong>Date Submitted:</strong>{{ complaint.created_at.strftime('%d %b %Y, %I:%M %p') }}</p>
+{% endif %}
+
+{% endblock %}

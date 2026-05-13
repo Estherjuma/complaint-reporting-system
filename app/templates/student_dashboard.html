@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+
+{% if complaints %}
+<div style="text-align:center;">
+    <h1>Student Dashboard</h1>
+    <h3>Below is a list of your submitted complaints:</h3>
+</div>
+<div class="admin-top">
+    <a class="logout-btn" href="{{ url_for('main.logout') }}">Logout</a>
+</div>
+<hr />
+<table border="1" width="100%">
+    <tr>
+        <th>Ticket ID</th>
+        <th>Category</th>
+        <th>Description</th>
+        <th>Evidence</th>
+        <th>Status</th>
+        <th>Date Submitted</th>
+    </tr>
+    {% for complaint in complaints %}
+    <tr>
+        <td>{{ complaint.ticket_id }}</td>
+        <td>{{ complaint.category }}</td>
+        <td>{{ complaint.description }}</td>
+        <td>{% if complaint.evidence_file %}
+            <a href="{{ url_for('static', filename='uploads/' ~ complaint.evidence_file) }}" target="_blank">
+                 View
+            </a>
+                {% else %}
+                     —
+                {% endif %}</td>
+        <td> 
+            {% if complaint.status == "Resolved" %}
+                <span class="badge resolved">Resolved</span>
+            {% elif complaint.status == "In Progress" %}
+                <span class="badge progress">In Progress</span>
+            {% else %}
+                <span class="badge pending">Pending</span>
+            {% endif %}
+        </td>
+        <td>{{ complaint.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>You have not submitted any complaints yet.</p>
+{% endif %}
+</div>
+{% endblock %}

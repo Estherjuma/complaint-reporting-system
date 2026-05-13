@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div style="text-align:center;">
+<h1>Complaint Reporting & Resolution System</h1>
+<div style="display: flex; justify-content: center; gap: 30px;">
+    <a href="{{ url_for('main.login') }}">
+        <button>Student Login</button>
+    </a>
+    <a href="{{ url_for('main.admin_login') }}">
+        <button>Admin Login</button>
+    </a>
+</div>
+<div style="text-align: center;">
+    <h2>Submit and track complaints easily.</h2>
+    <button onclick="window.location.href='/submit'">Submit Complaint</button>
+    <button onclick="window.location.href='/track'">Track Complaint</button>
+</div>
+
+</div>
+{% endblock %}

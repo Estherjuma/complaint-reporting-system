@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Complaint System{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+<header>
+  <nav style="text-align: right;">
+    <h2 style="text-align: left;">Complaint Reporting & Resolution System</h2>
+    <a href="/">Home</a>
+    <a href="{{ url_for('main.submit_complaint') }}">Submit Complaint</a>
+    <a href="{{ url_for('main.track_complaint') }}">Track Complaint</a>  
+  </nav>
+</header>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="success-message">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<div class="container">
+        {% block content %}{% endblock %}
+</div>
+
+<footer>2026 Complaint System</footer>
+</body>
+</html>
