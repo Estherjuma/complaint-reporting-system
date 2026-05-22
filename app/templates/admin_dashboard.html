@@ -1,100 +1,136 @@
 {% extends "base.html" %}
 {% block title %}Admin Dashboard{% endblock %}
-{% block content %}
-<div style="text-align:center;">
-<h1>Admin Dashboard</h1>
-<h3>Below is a list of submitted complaints</h3>
-</div>
-<div class="admin-top">
-    <a class="logout-btn" href="{{ url_for('main.logout') }}">Logout</a>
-</div>
-<hr />
-<div style="margin: 15px;margin-top: 40px;text-align:center;">
 
+{% block content %}
+
+<div class="dashboard-header">
+    <div>
+        <h1>Admin Dashboard</h1>
+        <p>Monitor, review and resolve student complaints</p>
+    </div>
+    <a class="dashboard-logout" href="{{ url_for('main.logout') }}">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        Logout
+    </a>
+</div>
+
+<!-- STATS -->
+<div class="stats-row">
+    <div class="dashboard-stat">
+        <h3>{{ complaints|length }}</h3>
+        <p>Total Complaints</p>
+    </div>
+    <div class="dashboard-stat">
+        <h3>{{ complaints|selectattr("status","equalto","Pending")|list|length }}</h3>
+        <p>Pending</p>
+    </div>
+    <div class="dashboard-stat">
+        <h3>{{ complaints|selectattr("status","equalto","In Progress")|list|length }}</h3>
+        <p>In Progress</p>
+    </div>
+    <div class="dashboard-stat">
+        <h3>{{ complaints|selectattr("status","equalto","Resolved")|list|length }}</h3>
+        <p>Resolved</p>
+    </div>
+</div>
+
+<!-- FILTER CARD -->
+
+<div class="dashboard-card">
+    <h3>Search & Filter Complaints</h3>
     <form method="GET" action="{{ url_for('main.admin_dashboard') }}" class="filter-form">
         <input type="text" name="search" placeholder="Search complaints...">
-
-    <select name="category">
-        <option value="">All Categories</option>
-        <option value="Service" {% if category == 'Service' %}selected{% endif %}>Service</option>
-        <option value="Staff" {% if category == 'Staff' %}selected{% endif %}>Staff</option>
-        <option value="Facilities" {% if category == 'Facilities' %}selected{% endif %}>Facilities</option>
-        <option value="Other" {% if category == 'Other' %}selected{% endif %}>Other</option>
-    </select>
-    <select name="status">
-        <option value="">All Status</option>
-        <option value="Pending" {% if status == 'Pending' %}selected{% endif %}>Pending</option>
-        <option value="In Progress" {% if status == 'In Progress' %}selected{% endif %}>In Progress</option>
-        <option value="Resolved" {% if status == 'Resolved' %}selected{% endif %}>Resolved</option>
-    </select>
-
-    <button type="submit">Apply Filters</button>
-    <a href="{{ url_for('main.admin_dashboard') }}">
-    <button type="button">Clear Filters</button>
-    </a>     
-</form>
+        <select name="category">
+            <option value=""> All Categories </option>
+            <option value="Service" {% if category == 'Service' %}selected{% endif %}>Service</option>
+            <option value="Staff" {% if category == 'Staff' %}selected{% endif %}>Staff</option>
+            <option value="Facilities" {% if category == 'Facilities' %}selected{% endif %}>Facilities</option>
+            <option value="Other" {% if category == 'Other' %}selected{% endif %}>Other</option>
+        </select>
+        <select name="status">
+            <option value="">All Status</option>
+            <option value="Pending"{% if status == 'Pending' %}selected{% endif %}>Pending</option>
+            <option value="In Progress"{% if status == 'In Progress' %}selected{% endif %}>In Progress</option>
+            <option value="Resolved"{% if status == 'Resolved' %}selected{% endif %}>Resolved</option>
+        </select>
+        <button type="submit">Apply</button>
+        <a href="{{ url_for('main.admin_dashboard') }}">
+            <button type="button">Reset</button>
+        </a>
+    </form>
 </div>
 
-<table border="1" width="100%">
-    <tr>
-        <th>Ticket ID</th>
-        <th>Name</th>
-        <th>Category</th>
-        <th>Description</th>
-        <th>Evidence</th>
-        <th>Status</th>
-        <th>Date Submitted</th>
-        <th>Action</th>
-    </tr>
-    {% for complaint in complaints %}
-    <tr>
-        <td>{{ complaint.ticket_id }}</td>
-        <td>
-            {% if complaint.is_anonymous %}
-            <em>Anonymous</em>
-            {% else %}
-            {{ complaint.name }}
-            {% endif %}
-        </td>
-        <td>{{ complaint.category }}</td>
-        <td>{{ complaint.description[:50] }}</td>
-        <td>
-            {% if complaint.evidence_file %}
-            <a href="{{ url_for('static', filename='uploads/' ~ complaint.evidence_file) }}" target="_blank">
-            View Evidence</a>
-            {% else %}
-            —
-            {% endif %}
-        </td>
-        <td>
-            {% if complaint.status == "Resolved" %}
-            <span class="badge resolved">Resolved</span>
-            {% elif complaint.status == "In Progress" %}
-            <span class="badge progress">In Progress</span>
-            {% else %}
-            <span class="badge pending">Pending</span>
-            {% endif %}
-        </td>
-        <td>{{ complaint.created_at.strftime('%d %b %Y, %I:%M %p') }}</td>
-        <td>
-            {% if complaint.status == "Pending" %}
-            <a href="{{ url_for('main.update_status', ticket_id=complaint.ticket_id, status='In Progress') }}">
-                <button>Start</button>
-            </a>
-            {% elif complaint.status == "In Progress" %}
-            <a href="{{ url_for('main.update_status', ticket_id=complaint.ticket_id, status='Resolved') }}">
-                <button>Resolve</button>
-            </a>
-            {% else %}
-            ✔
-            {% endif %}
-        </td>
-    </tr>
-    {% else %}
-    <tr>
-        <td colspan="6">No complaints submitted yet.</td>
-    </tr>
-    {% endfor %}
-</table>
-{% endblock %}
+<!-- COMPLAINT TABLE -->
 
+<div class="dashboard-card mt-4">
+    <h3>Complaint Records</h3>
+    <table>
+        <tr>
+            <th>Ticket</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>Evidence</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Action</th>
+        </tr>
+        {% for complaint in complaints %}
+        <tr>
+            <td>
+                {{ complaint.ticket_id }}
+            </td>
+            <td>
+                {% if complaint.is_anonymous %}
+                <em>Anonymous</em>
+                {% else %}
+                {{ complaint.name }}
+                {% endif %}
+            </td>
+            <td>
+                {{ complaint.category }}
+            </td>
+            <td>
+                {{ complaint.description[:50] }}...
+            </td>
+            <td>
+                {% if complaint.evidence_file %}
+                <a href="{{ url_for('static',filename='uploads/' ~ complaint.evidence_file) }}" target="_blank">View</a>
+                {% else %}
+                —
+                {% endif %}
+            </td>
+            <td>
+                {% if complaint.status=="Resolved" %}
+                <span class="badge resolved">Resolved</span>
+                {% elif complaint.status=="In Progress" %}
+                <span class="badge progress">In Progress</span>
+                {% else %}
+                <span class="badge pending">Pending</span>
+                {% endif %}
+            </td>
+            <td>
+                {{ complaint.created_at.strftime('%d %b %Y') }}
+            </td>
+            <td>
+                {% if complaint.status=="Pending" %}
+                <a href="{{ url_for('main.update_status',ticket_id=complaint.ticket_id,status='In Progress') }}">
+                    <button>Start</button>
+                </a>
+                {% elif complaint.status=="In Progress" %}
+                <a href="{{ url_for('main.update_status',ticket_id=complaint.ticket_id,status='Resolved') }}">
+                    <button>Resolve</button>
+                </a>
+                {% else %}
+                ✔
+                {% endif %}
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="8">No complaints submitted yet.</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

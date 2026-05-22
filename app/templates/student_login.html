@@ -1,19 +1,31 @@
 {% extends "base.html" %}
+
 {% block title %}Student Login{% endblock %}
+
 {% block content %}
 
-<h3>Student Login</h3>
-<div class="form-group">
-<form method="POST" action="{{ url_for('main.login') }}">
-    <label for="username">Username:</label>
-    <input type="text" name="username" id="username" required>
-
-    <label for="password">Password:</label>
-    <input type="password" name="password" id="password" required>
-
-    <button type="submit" style="margin-top: 10px;">Sign In</button>
-</form>
+<div class="login-wrapper">
+    <div class="login-card">
+        <div class="login-header">
+            <i class="fa-solid fa-user-graduate"></i>
+            <h2>Student Portal</h2>
+            <p>Sign in to manage and track your complaints</p>
+        </div>
+        <form method="POST" action="{{ url_for('main.login') }}">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" name="username" id="username" placeholder="Enter username" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" id="password" placeholder="Enter password" required>
+            </div>
+            <button type="submit" class="login-submit">Sign In</button>
+        </form>
+        <div class="register-link">
+            <p>Don't have an account?<a href="{{ url_for('main.register') }}">Create Account</a></p>
+        </div>
+    </div>
 </div>
-<p>Don't have an account? <a href="{{ url_for('main.register') }}">Sign Up</a></p>
-{% endblock %}
 
+{% endblock %}

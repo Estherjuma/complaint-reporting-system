@@ -1,52 +1,84 @@
 {% extends "base.html" %}
-{% block title %}Admin Dashboard{% endblock %}
+{% block title %}Student Dashboard{% endblock %}
 {% block content %}
 
+<div class="dashboard-header">
+    <div>
+        <h1>Student Dashboard</h1>
+        <p>Welcome back, {{ session.get("username") }}!</p>
+    </div>
+    <a class="dashboard-logout" href="{{ url_for('main.logout') }}">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        Logout
+    </a>
+</div>
+
 {% if complaints %}
-<div style="text-align:center;">
-    <h1>Student Dashboard</h1>
-    <h3>Below is a list of your submitted complaints:</h3>
+<div class="stats-row">
+    <div class="dashboard-stat">
+        <h3>{{ complaints|length }}</h3>
+        <p>Total Complaints</p>
+    </div>
+    <div class="dashboard-stat">
+        <h3>{{ complaints|selectattr("status","equalto","Pending")|list|length }}</h3>
+        <p>Pending</p>
+    </div>
+    <div class="dashboard-stat">
+        <h3>{{ complaints|selectattr("status","equalto","In Progress")|list|length }}</h3>
+        <p>In Progress</p>
+    </div>
+    <div class="dashboard-stat">
+        <h3>{{ complaints|selectattr("status","equalto","Resolved")|list|length }}</h3>
+        <p>Resolved</p>
+    </div>
 </div>
-<div class="admin-top">
-    <a class="logout-btn" href="{{ url_for('main.logout') }}">Logout</a>
-</div>
-<hr />
-<table border="1" width="100%">
-    <tr>
-        <th>Ticket ID</th>
-        <th>Category</th>
-        <th>Description</th>
-        <th>Evidence</th>
-        <th>Status</th>
-        <th>Date Submitted</th>
-    </tr>
-    {% for complaint in complaints %}
-    <tr>
-        <td>{{ complaint.ticket_id }}</td>
-        <td>{{ complaint.category }}</td>
-        <td>{{ complaint.description }}</td>
-        <td>{% if complaint.evidence_file %}
-            <a href="{{ url_for('static', filename='uploads/' ~ complaint.evidence_file) }}" target="_blank">
-                 View
-            </a>
+
+<div class="dashboard-card">
+    <h3>Your Complaint History</h3>
+    <table>
+        <tr>
+            <th>Ticket</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>Evidence</th>
+            <th>Status</th>
+            <th>Submitted</th>
+        </tr>
+        {% for complaint in complaints %}
+        <tr>
+            <td>{{ complaint.ticket_id }}</td>
+            <td>{{ complaint.category }}</td>
+            <td>{{ complaint.description }}</td>
+            <td>{% if complaint.evidence_file %}
+                <a href="{{ url_for('static', filename='uploads/' ~ complaint.evidence_file) }}" target="_blank">View</a>
                 {% else %}
-                     —
-                {% endif %}</td>
-        <td> 
-            {% if complaint.status == "Resolved" %}
+                —
+                {% endif %}
+            </td>
+            <td>
+                {% if complaint.status == "Resolved" %}
                 <span class="badge resolved">Resolved</span>
-            {% elif complaint.status == "In Progress" %}
+                {% elif complaint.status == "In Progress" %}
                 <span class="badge progress">In Progress</span>
-            {% else %}
+                {% else %}
                 <span class="badge pending">Pending</span>
-            {% endif %}
-        </td>
-        <td>{{ complaint.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% else %}
-<p>You have not submitted any complaints yet.</p>
-{% endif %}
+                {% endif %}
+            </td>
+            <td>
+                {{ complaint.created_at.strftime('%Y-%m-%d %H:%M') }}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
 </div>
+
+{% else %}
+<div class="empty-dashboard">
+    <i class="fa-regular fa-folder-open"></i>
+    <h2>No Complaints Yet</h2>
+    <p>You haven't submitted any complaints yet.</p>
+    <a href="{{ url_for('main.submit_complaint') }}"><button>Submit Complaint</button></a>
+</div>
+
+{% endif %}
 {% endblock %}
