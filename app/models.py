@@ -9,7 +9,7 @@ class User(db.Model):
     username = db.Column(db.String(100), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
     role = db.Column(db.String(20), nullable=False)  # 'student' or 'admin'
-
+    department = db.Column(db.String(100), nullable=True)
     complaints = db.relationship('Complaint', backref='user', lazy=True)
 
     def set_password(self, password):
@@ -31,6 +31,7 @@ class Complaint(db.Model):
     is_anonymous = db.Column(db.Boolean, default=False)
     # Status tracking
     status = db.Column(db.String(20), default="Pending")
+    admin_reply = db.Column(db.Text, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
   

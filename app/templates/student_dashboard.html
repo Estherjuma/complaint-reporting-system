@@ -43,6 +43,7 @@
             <th>Evidence</th>
             <th>Status</th>
             <th>Submitted</th>
+            <th>Admin Reply</th>
         </tr>
         {% for complaint in complaints %}
         <tr>
@@ -67,6 +68,15 @@
             <td>
                 {{ complaint.created_at.strftime('%Y-%m-%d %H:%M') }}
             </td>
+            <td>
+    {% if complaint.admin_reply %}
+        <div class="admin-reply-box">
+            {{ complaint.admin_reply }}
+        </div>
+    {% else %}
+        <span class="text-muted">No reply yet</span>
+    {% endif %}
+</td>
         </tr>
         {% endfor %}
     </table>

@@ -68,6 +68,14 @@
                     <p>{{ complaint.created_at.strftime('%d %b %Y, %I:%M %p') }}</p>
                 </div>
             </div>
+            {% if complaint.admin_reply %}
+
+<div class="alert alert-info mt-3">
+    <strong>Admin Reply:</strong><br>
+    {{ complaint.admin_reply }}
+</div>
+
+{% endif %}
         </div>
         {% endif %}
     </div>

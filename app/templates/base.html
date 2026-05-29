@@ -7,6 +7,7 @@
 
     <!-- Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
     rel="stylesheet">
 
@@ -18,21 +19,45 @@
     <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <!-- Existing stylesheet -->
+    <!-- CSS -->
     <link rel="stylesheet"
     href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 
 <body>
 
+<!-- TOAST SCRIPT -->
+
+<script>
+setTimeout(() => {
+
+document.querySelectorAll(".custom-toast").forEach((toast)=>{
+
+toast.style.opacity="0";
+toast.style.transform="translateX(40px)";
+
+setTimeout(()=>{
+toast.remove();
+},500);
+
+});
+
+},3000);
+</script>
+
+<!-- SIDEBAR FOR LOGGED IN USERS -->
+
 {% if session.get("role") %}
 
 <div class="portal-layout">
+
     <aside class="sidebar">
+
         <div class="sidebar-top">
             <h2>🎓 Complaint Portal</h2>
+
             <p>
-            {% if session.get("role")=="admin" %}
+            {% if session.get("role") in ["admin", "super_admin"] %}
                 Administrator
             {% else %}
                 Student Portal
@@ -43,62 +68,159 @@
         <div class="sidebar-menu">
 
         {% if session.get("role")=="student" %}
-            <a class="{% if request.endpoint == 'main.student_dashboard' %}active-link{% endif %}" href="{{ url_for('main.student_dashboard') }}">Dashboard</a>
-            <a class="{% if request.endpoint == 'main.submit_complaint' %}active-link{% endif %}" href="{{ url_for('main.submit_complaint') }}">Submit Complaint</a>
-            <a class="{% if request.endpoint == 'main.track_complaint' %}active-link{% endif %}" href="{{ url_for('main.track_complaint') }}">Track Complaint</a>
+
+            <a
+            class="{% if request.endpoint == 'main.student_dashboard' %}active-link{% endif %}"
+            href="{{ url_for('main.student_dashboard') }}">
+            Dashboard
+            </a>
+
+            <a
+            class="{% if request.endpoint == 'main.submit_complaint' %}active-link{% endif %}"
+            href="{{ url_for('main.submit_complaint') }}">
+            Submit Complaint
+            </a>
+
+            <a
+            class="{% if request.endpoint == 'main.track_complaint' %}active-link{% endif %}"
+            href="{{ url_for('main.track_complaint') }}">
+            Track Complaint
+            </a>
+
         {% endif %}
 
-        {% if session.get("role")=="admin" %}
-            <a class="{% if request.endpoint == 'main.admin_dashboard' %}active-link{% endif %}" href="{{ url_for('main.admin_dashboard') }}">Dashboard</a>
-            <a class="{% if request.endpoint == 'main.admin_dashboard' %}active-link{% endif %}" href="{{ url_for('main.admin_dashboard') }}">Manage Complaints</a>
-        {% endif %}
+        {% if session.get("role") in ["admin", "super_admin"] %}
+
+<a class="{% if request.endpoint == 'main.admin_dashboard' %}active-link{% endif %}"
+href="{{ url_for('main.admin_dashboard') }}">
+    Dashboard Analytics
+</a>
+
+<a class="{% if request.endpoint == 'main.manage_complaints' %}active-link{% endif %}"
+href="{{ url_for('main.manage_complaints') }}">
+    Manage Complaints
+</a>
+
+<a class="{% if request.endpoint == 'main.generate_report' %}active-link{% endif %}"
+href="{{ url_for('main.generate_report') }}">
+    Generate Report
+</a>
+
+{% endif %}
+
         </div>
 
         <div class="sidebar-bottom">
-            <a href="{{ url_for('main.logout') }}">Logout</a>
+
+            <a href="{{ url_for('main.logout') }}">
+                Logout
+            </a>
+
+            {% if session.get("role") == "student" %}
+
+            <a
+            class="delete-account-btn"
+            href="{{ url_for('main.delete_account') }}"
+            onclick="return confirm('Are you sure you want to delete your account?')">
+
+            Delete Account
+
+            </a>
+
+            {% endif %}
+
         </div>
+
     </aside>
+
     <main class="main-content">
 
 {% else %}
 
+<!-- GUEST NAVBAR -->
+
 <header>
-  <nav class="custom-nav">
-    <div class="nav-container">
-      <h2>🎓 Complaint System</h2>
-      <div>
-        <a href="/">Home</a>
-        <a href="{{ url_for('main.submit_complaint') }}">Submit Complaint</a>
-        <a href="{{ url_for('main.track_complaint') }}">Track Complaint</a>
-        <a href="{{ url_for('main.login') }}">Student Login</a>
-        <a href="{{ url_for('main.admin_login') }}">Admin Login</a>
-      </div>
-    </div>
-  </nav>
+
+    <nav class="custom-nav">
+
+        <div class="nav-container">
+
+            <h2>🎓 Complaint System</h2>
+
+            <div>
+
+                <a href="/">Home</a>
+
+                <a href="{{ url_for('main.submit_complaint') }}">
+                    Submit Complaint
+                </a>
+
+                <a href="{{ url_for('main.track_complaint') }}">
+                    Track Complaint
+                </a>
+
+                <a href="{{ url_for('main.login') }}">
+                    Student Login
+                </a>
+
+                <a href="{{ url_for('main.admin_login') }}">
+                    Admin Login
+                </a>
+
+            </div>
+
+        </div>
+
+    </nav>
+
 </header>
 
 <div class="container">
-  {% endif %}
-  {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-  <div class="success-message">
-    {% for category,message in messages %}
-    <div class="alert alert-{{category}}">
-      {{message}}
-    </div>
-    {% endfor %}
-  </div>
-  {% endif %}
-  {% endwith %}
-  {% block content %}
-  {% endblock %}
-  {% if session.get("role") %}
-</main>
+
+{% endif %}
+
+<!-- FLASH MESSAGES -->
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+
+{% if messages %}
+
+<div class="toast-container">
+
+{% for category,message in messages %}
+
+<div class="custom-toast {{ category }}">
+    {{ message }}
 </div>
-{% else %}
+
+{% endfor %}
+
 </div>
 
 {% endif %}
+
+{% endwith %}
+
+<!-- PAGE CONTENT -->
+
+{% block content %}
+{% endblock %}
+
+<!-- CLOSE LAYOUTS -->
+
+{% if session.get("role") %}
+
+    </main>
+
+</div>
+
+{% else %}
+
+</div>
+
+{% endif %}
+
+<!-- FOOTER -->
 
 <footer>
 © 2026 University Complaint Reporting System

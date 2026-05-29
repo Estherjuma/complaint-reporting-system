@@ -36,17 +36,18 @@
              <div class="col-lg-6 text-center">
                 <div class="dashboard-preview">
                     <div class="stat-card">
-                        <h3>345</h3>
+                        <h3> {{ complaints|selectattr("status","equalto","Resolved")|list|length }}</h3>
                         <p>Resolved</p>
                     </div>
                     <div class="stat-card">
-                        <h3>34</h3>
-                        <p>Pending</p>
+                        <h3> {{ complaints|selectattr("status","equalto","In Progress")|list|length }}</h3>
+                        <p>In Progress</p>
                     </div>
                     <div class="stat-card">
-                        <h3>96%</h3>
-                        <p>Response Rate</p>
+                        <h3> {{ complaints|selectattr("status","equalto","Pending")|list|length }}</h3>
+                        <p>Pending</p>
                     </div>
+                    
                 </div>
             </div>
         </div>

@@ -1,0 +1,265 @@
+{% extends "base.html" %}
+{% block title %}Manage Complaints{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-header">
+    <div>
+        <h1>Manage Complaints</h1>
+        <p>Review, manage and respond to student complaints</p>
+    </div>
+</div>
+
+<!-- FILTER SECTION -->
+
+<div class="dashboard-card">
+
+    <h3>Search & Filter Complaints</h3>
+
+    <form method="GET"
+          action="{{ url_for('main.manage_complaints') }}"
+          class="filter-form">
+
+        <input type="text"
+               name="search"
+               placeholder="Search complaints...">
+
+        <select name="category">
+
+            <option value="">All Categories</option>
+
+            <option value="Service"
+            {% if category == 'Service' %}selected{% endif %}>
+                Service
+            </option>
+
+            <option value="Staff"
+            {% if category == 'Staff' %}selected{% endif %}>
+                Staff
+            </option>
+
+            <option value="Facilities"
+            {% if category == 'Facilities' %}selected{% endif %}>
+                Facilities
+            </option>
+
+            <option value="Other"
+            {% if category == 'Other' %}selected{% endif %}>
+                Other
+            </option>
+
+        </select>
+
+        <select name="status">
+
+            <option value="">All Status</option>
+
+            <option value="Pending"
+            {% if status == 'Pending' %}selected{% endif %}>
+                Pending
+            </option>
+
+            <option value="In Progress"
+            {% if status == 'In Progress' %}selected{% endif %}>
+                In Progress
+            </option>
+
+            <option value="Resolved"
+            {% if status == 'Resolved' %}selected{% endif %}>
+                Resolved
+            </option>
+
+        </select>
+
+        <button type="submit">
+            Apply
+        </button>
+
+        <a href="{{ url_for('main.manage_complaints') }}">
+            <button type="button">
+                Reset
+            </button>
+        </a>
+
+    </form>
+
+</div>
+
+<!-- COMPLAINT TABLE -->
+
+<div class="dashboard-card mt-4">
+
+    <h3>Complaint Records</h3>
+
+    <table>
+
+        <tr>
+            <th>Ticket</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>Evidence</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Actions / Admin Reply</th>
+        </tr>
+
+        {% for complaint in complaints %}
+
+        <tr>
+
+            <!-- Ticket -->
+            <td>
+                {{ complaint.ticket_id }}
+            </td>
+
+            <!-- Name -->
+            <td>
+
+                {% if complaint.is_anonymous %}
+                    <em>Anonymous</em>
+                {% else %}
+                    {{ complaint.name }}
+                {% endif %}
+
+            </td>
+
+            <!-- Category -->
+            <td>
+                {{ complaint.category }}
+            </td>
+
+            <!-- Description -->
+            <td>
+                {{ complaint.description[:50] }}...
+            </td>
+
+            <!-- Evidence -->
+            <td>
+
+                {% if complaint.evidence_file %}
+
+                <a href="{{ url_for(
+                'static',
+                filename='uploads/' ~ complaint.evidence_file) }}"
+                target="_blank">
+
+                    View
+
+                </a>
+
+                {% else %}
+                    —
+                {% endif %}
+
+            </td>
+
+            <!-- Status -->
+            <td>
+
+                {% if complaint.status == "Resolved" %}
+
+                    <span class="badge resolved">
+                        Resolved
+                    </span>
+
+                {% elif complaint.status == "In Progress" %}
+
+                    <span class="badge progress">
+                        In Progress
+                    </span>
+
+                {% else %}
+
+                    <span class="badge pending">
+                        Pending
+                    </span>
+
+                {% endif %}
+
+            </td>
+
+            <!-- Date -->
+            <td>
+                {{ complaint.created_at.strftime('%d %b %Y') }}
+            </td>
+
+            <!-- ACTIONS + REPLY -->
+            <td>
+
+                <!-- STATUS BUTTONS -->
+
+                {% if complaint.status == "Pending" %}
+
+                <a href="{{ url_for(
+                'main.update_status',
+                ticket_id=complaint.ticket_id,
+                status='In Progress') }}">
+
+                    <button>
+                        Start
+                    </button>
+
+                </a>
+
+                {% elif complaint.status == "In Progress" %}
+
+                <a href="{{ url_for(
+                'main.update_status',
+                ticket_id=complaint.ticket_id,
+                status='Resolved') }}">
+
+                    <button>
+                        Resolve
+                    </button>
+
+                </a>
+
+                {% else %}
+
+                    ✔
+
+                {% endif %}
+
+                <!-- ADMIN REPLY FORM -->
+
+                <form method="POST"
+                action="{{ url_for(
+                'main.admin_reply',
+                ticket_id=complaint.ticket_id) }}">
+
+                    <textarea
+                    name="reply"
+                    placeholder="Write admin feedback..."
+                    class="reply-box">{{ complaint.admin_reply or '' }}</textarea>
+
+                    <button type="submit"
+                    class="reply-btn">
+
+                        Save Reply
+
+                    </button>
+
+                </form>
+
+            </td>
+
+        </tr>
+
+        {% else %}
+
+        <tr>
+
+            <td colspan="8">
+                No complaints submitted yet.
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+</div>
+
+{% endblock %}
