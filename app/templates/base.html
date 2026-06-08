@@ -118,7 +118,7 @@ setTimeout(() => {
         <!-- CENTER LINKS -->
         <div class="nav-center-links">
             <a href="/">Home</a>
-            <a href="#about">About Us</a>
+            <a href="{{ url_for('main.home') }}#about">About Us</a>
             <a href="{{ url_for('main.submit_complaint') }}">Submit Complaint</a>
             <a href="{{ url_for('main.track_complaint') }}">Track Complaint</a>
         </div>
