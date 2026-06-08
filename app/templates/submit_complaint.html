@@ -2,31 +2,24 @@
 {% block title %}Submit Complaint{% endblock %}
 
 {% block content %}
-    {% if success %}
+{% if success %}
 
-<div class="alert alert-success success-box">
-
+<div class="ticket-confirmation">
     <h4>
         <i class="fa-solid fa-circle-check"></i>
         Complaint Submitted Successfully
     </h4>
-
-    <p>
-        Your complaint has been received successfully.
-    </p>
-
-    <div class="ticket-display">
-        {{ ticket_id }}
+    <p>Your complaint has been received successfully and is awaiting review.</p>
+    <div class="ticket-box">
+        Ticket ID
+        <strong>{{ ticket_id }}</strong>
     </div>
-
-    <p class="mt-3">
-        Please save this Ticket ID carefully.  
-        You will use it to track your complaint later.
-    </p>
-
+    <p class="mt-3">Please save this Ticket ID carefully.You will need it to track your complaint.</p>
+    <a href="{{ url_for('main.track_complaint') }}" class="track-btn">
+        Track Complaint
+    </a>
 </div>
-
-{% endif %}
+{% else %}
 <div class="form-page">
     <div class="complaint-card">
         <div class="form-header">
@@ -71,6 +64,7 @@
         </div>
     </div>
 </div>
+{% endif %}
 <script>document.getElementById("anonymousCheck").addEventListener("change",function(){const nameField=document.getElementById("nameField");nameField.style.display=this.checked? "none": "block";});</script>
 
 {% endblock %}

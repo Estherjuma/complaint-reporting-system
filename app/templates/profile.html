@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+
+<div class="login-wrapper">
+    <div class="login-card">
+
+        <div class="login-header">
+            <i class="fa-solid fa-user"></i>
+            <h2>My Profile</h2>
+            <p>Account information</p>
+        </div>
+
+        <div class="profile-info">
+
+            <div class="profile-row">
+                <strong>Username</strong>
+                <p>{{ user.username }}</p>
+            </div>
+
+            <div class="profile-row">
+                <strong>Role</strong>
+                <p>{{ user.role|replace('_',' ')|title }}</p>
+            </div>
+
+            {% if user.department %}
+            <div class="profile-row">
+                <strong>Department</strong>
+                <p>{{ user.department }}</p>
+            </div>
+            {% endif %}
+
+        </div>
+
+        <a href="{{ url_for('main.change_password') }}"
+           class="login-submit"
+           style="display:block;text-align:center;text-decoration:none;">
+            Change Password
+        </a>
+        <a class="dashboard-logout" href="{{ url_for('main.logout') }}">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            Logout
+        </a>
+        {% if session.get("role") == "student" %}
+        <a class="delete-account-btn" href="{{ url_for('main.delete_account') }}" onclick="return confirm('Are you sure you want to delete your account?')">
+            Delete Account
+        </a>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}

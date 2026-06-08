@@ -13,7 +13,7 @@
         <form method="POST">
             <div class="form-group">
                 <label>Ticket ID</label>
-                <input type="text" name="ticket_id" placeholder="Enter your ticket ID..." required>
+                <input type="text" name="ticket_id" value="{{ ticket_id or '' }}" placeholder="Enter your ticket ID..." required>
             </div>
             <button type="submit" class="submit-btn">Track Complaint</button>
         </form>

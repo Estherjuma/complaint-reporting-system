@@ -11,6 +11,7 @@ class User(db.Model):
     role = db.Column(db.String(20), nullable=False)  # 'student' or 'admin'
     department = db.Column(db.String(100), nullable=True)
     complaints = db.relationship('Complaint', backref='user', lazy=True)
+    notifications = db.relationship('Notification', backref='user', lazy=True)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -34,7 +35,12 @@ class Complaint(db.Model):
     admin_reply = db.Column(db.Text, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
-  
+class Notification(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    message = db.Column( db.String(255), nullable=False)
+    is_read = db.Column( db.Boolean, default=False)
+    created_at = db.Column( db.DateTime, default=datetime.utcnow)
    
    
 

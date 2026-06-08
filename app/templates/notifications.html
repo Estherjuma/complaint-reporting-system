@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-card">
+    <h2>
+        <i class="fa-solid fa-bell"></i>
+        Notifications
+    </h2>
+
+    {% if notifications %}
+
+        {% for n in notifications %}
+
+            {% if session.get("role") == "student" %}
+
+                <a href="{{ url_for(
+                    'main.track_complaint',
+                    ticket='TCK-' + n.message.split('TCK-')[1].split()[0]
+                    if 'TCK-' in n.message else ''
+                ) }}"
+                class="notification-link">
+
+            {% else %}
+
+                <a href="{{ url_for(
+                    'main.manage_complaints',
+                    search='TCK-' + n.message.split('TCK-')[1].split()[0]
+                    if 'TCK-' in n.message else ''
+                ) }}"
+                class="notification-link">
+
+            {% endif %}
+
+                    <div class="notification-item {% if not n.is_read %}unread{% endif %}">
+                        <p>{{ n.message }}</p>
+                        <small>
+                            {{ n.created_at.strftime('%d %b %Y %H:%M') }}
+                        </small>
+                    </div>
+
+                </a>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>No notifications available.</p>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

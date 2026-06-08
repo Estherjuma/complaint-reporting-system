@@ -7,10 +7,6 @@
         <h1>Student Dashboard</h1>
         <p>Welcome back, {{ session.get("username") }}!</p>
     </div>
-    <a class="dashboard-logout" href="{{ url_for('main.logout') }}">
-        <i class="fa-solid fa-right-from-bracket"></i>
-        Logout
-    </a>
 </div>
 
 {% if complaints %}
@@ -69,14 +65,14 @@
                 {{ complaint.created_at.strftime('%Y-%m-%d %H:%M') }}
             </td>
             <td>
-    {% if complaint.admin_reply %}
-        <div class="admin-reply-box">
-            {{ complaint.admin_reply }}
-        </div>
-    {% else %}
-        <span class="text-muted">No reply yet</span>
-    {% endif %}
-</td>
+                {% if complaint.admin_reply %}
+                <div class="admin-reply-box">
+                    {{ complaint.admin_reply }}
+                </div>
+                {% else %}
+                <span class="text-muted">No reply yet</span>
+                {% endif %}
+            </td>
         </tr>
         {% endfor %}
     </table>

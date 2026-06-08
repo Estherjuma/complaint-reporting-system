@@ -1,58 +1,103 @@
 {% extends "base.html" %}
-
-{% block title %}Home{% endblock %}
+{% block title %} Home{% endblock %}
 
 {% block content %}
-
+<!-- HERO SECTION -->
 <section class="hero">
-    <div class="container">
-        <div class="row align-items-center">
-            <!-- LEFT SIDE -->
-            <div class="col-lg-6">
-                <h1 class="hero-title">Report Campus Issues Easily</h1>
-                <p class="hero-text">A simple and transparent system for students to submit, monitor, and resolve complaints across campus services.</p>
-                <div class="hero-buttons">
-                    <a href="{{ url_for('main.submit_complaint') }}">
-                        <button>Submit Complaint</button>
-                    </a>
-                    <a href="{{ url_for('main.track_complaint') }}">
-                        <button class="outline-btn">Track Complaint</button>
-                    </a>
-                </div>
-                <div class="login-cards">
-                    <a href="{{ url_for('main.login') }}" class="portal-card">
-                        <i class="fa-solid fa-user-graduate"></i>
-                        <h5>Student Portal</h5>
-                        <p>Login to manage complaints</p>
-                    </a>
-                    <a href="{{ url_for('main.admin_login') }}" class="portal-card">
-                        <i class="fa-solid fa-user-shield"></i>
-                        <h5>Admin Portal</h5>
-                        <p>Review and resolve reports</p>
-                    </a>
-                </div>
+<div class="container">
+    <div class="row align-items-center">
+        <!-- LEFT SIDE-->
+         <div class="col-lg-6">
+            <h1 class="hero-title">Your Voice Matters on Campus</h1>
+            <div class="hero-badge">
+                <i class="fa-solid fa-shield-heart"></i>
+                Safe • Transparent • Student Focused
             </div>
-            <!-- RIGHT SIDE -->
-             <div class="col-lg-6 text-center">
-                <div class="dashboard-preview">
-                    <div class="stat-card">
-                        <h3> {{ complaints|selectattr("status","equalto","Resolved")|list|length }}</h3>
-                        <p>Resolved</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3> {{ complaints|selectattr("status","equalto","In Progress")|list|length }}</h3>
-                        <p>In Progress</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3> {{ complaints|selectattr("status","equalto","Pending")|list|length }}</h3>
-                        <p>Pending</p>
-                    </div>
-                    
-                </div>
+            <p class="hero-text">Report academic, facility, accommodation, or campus-related concerns through a secure modern platform built to improve student life and communication within the university.</p>
+            <div class="hero-buttons">
+                <a href="{{ url_for('main.submit_complaint') }}"> 
+                    <button>Submit Complaint</button> 
+                </a> 
+                <a href="{{ url_for('main.track_complaint') }}"> 
+                    <button class="outline-btn">Track Complaint</button> 
+                </a> 
+            </div>
+            <div class="login-cards"> 
+                <a href="{{ url_for('main.login') }}" class="portal-card"> 
+                    <i class="fa-solid fa-user-graduate"></i> 
+                    <h5>Student Portal</h5> 
+                    <p>Login to submit and manage complaints</p> 
+                </a> 
+                <a href="{{ url_for('main.admin_login') }}" class="portal-card">
+                    <i class="fa-solid fa-user-shield"></i> 
+                    <h5>Admin Portal</h5> 
+                    <p>Review and resolve student complaints</p>
+                </a>
             </div>
         </div>
-    </div>
+        <!-- RIGHT SIDE -->
+         <div class="col-lg-6"> 
+            <div class="hero-image-wrapper"> 
+                <img src="{{ url_for('static', filename='uploads/project school.jpeg') }}" class="hero-image" alt="University"> 
+                <!-- FLOATING CARD 1 --> 
+                 <div class="floating-card top-card"> 
+                    <i class="fa-solid fa-clock"></i> 
+                    <div> 
+                        <h4>24/7 Reporting</h4> 
+                        <p>Always available</p> 
+                    </div> 
+                </div> 
+                <!-- FLOATING CARD 2 --> 
+                 <div class="floating-card bottom-card"> 
+                    <i class="fa-solid fa-shield-halved"></i> 
+                    <div> 
+                        <h4>Anonymous Option</h4> 
+                        <p>Privacy protected</p> 
+                    </div> 
+                </div> 
+            </div> 
+        </div> 
+    </div> 
+</div> 
 </div>
+
+<!-- HOW IT WORKS -->
+ <section class="how-section"> 
+    <div class="container"> 
+        <div class="section-title"> 
+            <h2>How It Works</h2> 
+            <p>Submit and track complaints in three simple steps</p> 
+        </div> 
+        <div class="how-grid"> 
+            <div class="how-card"> 
+                <i class="fa-solid fa-file-circle-plus"></i> 
+                <h4>Submit Complaint</h4> 
+                <p>Students submit complaints with optional evidence.</p> 
+            </div> 
+            <div class="how-card"> 
+                <i class="fa-solid fa-magnifying-glass"></i> 
+                <h4>Track Progress</h4> 
+                <p>Use your ticket ID to monitor complaint status.</p> 
+            </div> 
+            <div class="how-card"> 
+                <i class="fa-solid fa-circle-check"></i> 
+                <h4>Receive Resolution</h4> 
+                <p>Administrators review and resolve reported issues.</p> 
+            </div> 
+        </div> 
+    </div> 
+</section>
+
+<!-- ABOUT US -->
+<section class="about-section" id="about"> 
+    <div class="container"> 
+        <div class="section-title"> 
+            <h2>About Us</h2> 
+        </div> 
+        <div class="about-card"> 
+            <p> Campus Voice was created to strengthen communication between students and university administration by providing a transparent digital reporting platform. Our goal is to encourage accountability, improve student welfare, and ensure that every concern raised receives proper attention and follow-up. </p> 
+        </div> 
+    </div> 
 </section>
 
 {% endblock %}

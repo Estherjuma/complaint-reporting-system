@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Complaint Details{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-card">
+
+    <h2>Complaint Details</h2>
+
+    <p><strong>Ticket:</strong> {{ complaint.ticket_id }}</p>
+
+    <p><strong>Category:</strong> {{ complaint.category }}</p>
+
+    <p><strong>Status:</strong> {{ complaint.status }}</p>
+
+    <p><strong>Submitted:</strong>
+        {{ complaint.created_at.strftime('%d %b %Y %H:%M') }}
+    </p>
+
+    <hr>
+
+    <h4>Description</h4>
+
+    <div class="admin-reply-box">
+        {{ complaint.description }}
+    </div>
+
+    {% if complaint.evidence_file %}
+    <p class="mt-3">
+        <a href="{{ url_for('static',
+            filename='uploads/' ~ complaint.evidence_file) }}"
+            target="_blank">
+            View Evidence
+        </a>
+    </p>
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -8,139 +8,99 @@
         <h1>Admin Dashboard</h1>
         <p>Monitor, review and resolve student complaints</p>
     </div>
-
-    <a class="dashboard-logout" href="{{ url_for('main.logout') }}">
-        <i class="fa-solid fa-right-from-bracket"></i>
-        Logout
-    </a>
 </div>
 
 <!-- ANALYTICS STATS -->
-
 <div class="stats-row">
-
     <div class="dashboard-stat">
         <i class="fa-solid fa-folder-open stat-icon"></i>
         <h3>{{ complaints|length }}</h3>
         <p>Total Complaints</p>
     </div>
-
     <div class="dashboard-stat">
         <i class="fa-solid fa-clock stat-icon"></i>
         <h3>{{ complaints|selectattr("status","equalto","Pending")|list|length }}</h3>
         <p>Pending</p>
     </div>
-
     <div class="dashboard-stat">
         <i class="fa-solid fa-spinner stat-icon"></i>
         <h3>{{ complaints|selectattr("status","equalto","In Progress")|list|length }}</h3>
         <p>In Progress</p>
     </div>
-
     <div class="dashboard-stat">
         <i class="fa-solid fa-circle-check stat-icon"></i>
         <h3>{{ complaints|selectattr("status","equalto","Resolved")|list|length }}</h3>
         <p>Resolved</p>
     </div>
-
     <div class="dashboard-stat">
         <i class="fa-solid fa-user-secret stat-icon"></i>
         <h3>{{ complaints|selectattr("is_anonymous","equalto",True)|list|length }}</h3>
         <p>Anonymous Reports</p>
     </div>
-
     <div class="dashboard-stat">
         <i class="fa-solid fa-chart-line stat-icon"></i>
-
         <h3>
         {% if complaints|length > 0 %}
-            {{
-            (
-            complaints|selectattr("status","equalto","Resolved")|list|length
-            / complaints|length * 100
-            )|round(0)
-            }}%
+            {{(complaints|selectattr("status","equalto","Resolved")|list|length/ complaints|length * 100)|round(0)}}%
         {% else %}
             0%
         {% endif %}
         </h3>
-
         <p>Resolution Rate</p>
     </div>
-
 </div>
 
 <!-- ANALYTICS OVERVIEW -->
-
 <div class="analytics-grid">
-
     <div class="analytics-card">
-
         <h3>
             <i class="fa-solid fa-layer-group"></i>
             Complaint Categories
         </h3>
-
         <div class="analytics-item">
             <span>Service</span>
-
             <strong>
                 {{ complaints|selectattr("category","equalto","Service")|list|length }}
             </strong>
         </div>
-
         <div class="progress-line">
-            <div class="progress-fill service-fill"></div>
+            <div class="progress-fill"style="width:{{ service_percent }}%; background:#2563eb;"></div>
         </div>
-
         <div class="analytics-item">
             <span>Staff</span>
-
             <strong>
                 {{ complaints|selectattr("category","equalto","Staff")|list|length }}
             </strong>
         </div>
-
         <div class="progress-line">
-            <div class="progress-fill staff-fill"></div>
+            <div class="progress-fill"style="width:{{ staff_percent }}%; background:#06b6d4;"></div>
         </div>
-
         <div class="analytics-item">
             <span>Facilities</span>
-
             <strong>
                 {{ complaints|selectattr("category","equalto","Facilities")|list|length }}
             </strong>
         </div>
-
         <div class="progress-line">
-            <div class="progress-fill facilities-fill"></div>
+            <div class="progress-fill"style="width:{{ facilities_percent }}%; background:#f59e0b;"></div>
         </div>
-
         <div class="analytics-item">
             <span>Other</span>
-
             <strong>
                 {{ complaints|selectattr("category","equalto","Other")|list|length }}
             </strong>
         </div>
-
         <div class="progress-line">
-            <div class="progress-fill other-fill"></div>
+            <div class="progress-fill"style="width:{{ other_percent }}%; background:#8b5cf6;"></div>
         </div>
-
     </div>
-
     <div class="analytics-card">
-
         <h3>
             <i class="fa-solid fa-chart-pie"></i>
             System Insights
         </h3>
-
         <div class="insight-box">
             <h4>Most Common Status</h4>
-
             <p>
             {% if complaints|selectattr("status","equalto","Pending")|list|length >
             complaints|selectattr("status","equalto","Resolved")|list|length %}
@@ -150,33 +110,25 @@
             {% endif %}
             </p>
         </div>
-
         <div class="insight-box">
             <h4>Anonymous Reports</h4>
-
             <p>
                 {{ complaints|selectattr("is_anonymous","equalto",True)|list|length }}
                 anonymous complaints submitted
             </p>
         </div>
-
         <div class="insight-box">
             <h4>System Health</h4>
-
             <p>
                 Complaint management system operating normally
             </p>
         </div>
-
     </div>
-
 </div>
 <!-- RECENT ACTIVITY -->
 
 <div class="analytics-grid mt-4">
-
     <div class="analytics-card">
-
         <h3>
             <i class="fa-solid fa-clock-rotate-left"></i>
             Recent Activity
@@ -185,16 +137,13 @@
         {% for complaint in complaints[:5] %}
 
         <div class="activity-item">
-
             <div>
                 <strong>{{ complaint.ticket_id }}</strong>
                 <p>
                     {{ complaint.category }} complaint submitted
                 </p>
             </div>
-
             <span class="activity-status">
-
                 {% if complaint.status == "Resolved" %}
                     Resolved
 
@@ -205,15 +154,10 @@
                     Pending
 
                 {% endif %}
-
             </span>
-
         </div>
-
         {% endfor %}
-
     </div>
-
 </div>
 
 {% endblock %}
